@@ -9,13 +9,13 @@ use App\Models\Task;
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tack一覧を返す
      *
-     * @return \Illuminate\Http\Response
+     * @return Tack[] \Illuminate\Support\Collection
      */
     public function index()
     {
-        //
+        return Task::orderByDesc('id')->get();
     }
 
     /**
