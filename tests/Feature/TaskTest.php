@@ -8,17 +8,63 @@ use Tests\TestCase;
 
 class TaskTest extends TestCase
 {
+    // // use RefreshDatabase;
+    // /**
+    //  * @test
+    //  */
+    // public function 一覧を取得できる()
+    // {
+    //     $tasks = Task::factory()->count(10)->create();
+
+    //     $response = $this->getJson('api/tasks');
+        
+    //     $response
+    //         ->assertOK()
+    //         ->assertJsonCount($tasks->count());
+    // }
+
+
     /**
      * @test
      */
-    public function 一覧を取得()
+    public function 登録することができる()
     {
-        $tasks = Task::factory()->count(10)->create();
+        $data = [
+            'title' => 'テスト投稿',
+            'user_id' => 1
+        ];
 
-        $response = $this->getJson('api/tasks');
-        
+        $response = $this->postJson('api/tasks', $data);
+
+        $response
+            ->assertCreated()
+            ->assertJsonFragment($data);
+    }
+
+    /**
+     * @test
+     */
+    public function 更新することができる()
+    {
+        $task = Task::find(1);
+
+        $task->title = '書き換え';
+
+        $response = $this->patchJson("api/tasks/{$task->id}", $task->toArray());
+
         $response
             ->assertOK()
-            ->assertJsonCount($tasks->count());
+            ->assertJsonFragment($task->toArray());
     }
+
+        /**
+     * @test
+     */
+    public function 削除することができる()
+    {
+        $response = $this->deleteJson("api/tasks/1");
+
+        $response->assertOK();
+    }
+
 }
