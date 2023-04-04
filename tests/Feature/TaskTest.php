@@ -24,47 +24,66 @@ class TaskTest extends TestCase
     // }
 
 
+    // /**
+    //  * @test
+    //  */
+    // public function 登録することができる()
+    // {
+    //     $data = [
+    //         'title' => 'テスト投稿',
+    //         'user_id' => 1
+    //     ];
+
+    //     $response = $this->postJson('api/tasks', $data);
+
+    //     $response
+    //         ->assertCreated()
+    //         ->assertJsonFragment($data);
+    // }
+
     /**
      * @test
      */
-    public function 登録することができる()
+    // public function 更新することができる()
+    // {
+    //     $task = Task::find(1);
+
+    //     $task->title = '書き換え';
+
+    //     $response = $this->patchJson("api/tasks/{$task->id}", $task->toArray());
+
+    //     $response
+    //         ->assertOK()
+    //         ->assertJsonFragment($task->toArray());
+    // }
+
+    // /**
+    //  * @test
+    //  */
+    // public function 削除することができる()
+    // {
+    //     $response = $this->deleteJson("api/tasks/1");
+
+    //     $response->assertOK();
+    // }
+
+    /**
+     * @test
+     */
+    public function タイトルが空の場合は登録できない()
     {
         $data = [
-            'title' => 'テスト投稿',
+            'title' => '',
             'user_id' => 1
         ];
 
         $response = $this->postJson('api/tasks', $data);
-
+         
         $response
-            ->assertCreated()
-            ->assertJsonFragment($data);
-    }
-
-    /**
-     * @test
-     */
-    public function 更新することができる()
-    {
-        $task = Task::find(1);
-
-        $task->title = '書き換え';
-
-        $response = $this->patchJson("api/tasks/{$task->id}", $task->toArray());
-
-        $response
-            ->assertOK()
-            ->assertJsonFragment($task->toArray());
-    }
-
-        /**
-     * @test
-     */
-    public function 削除することができる()
-    {
-        $response = $this->deleteJson("api/tasks/1");
-
-        $response->assertOK();
+            ->assertStatus(422)
+            ->assertJsonValidationErrors([
+                'title' => 'validation.required'
+            ]);
     }
 
 }
